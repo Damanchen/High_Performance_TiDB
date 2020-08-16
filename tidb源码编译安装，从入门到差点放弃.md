@@ -29,7 +29,7 @@ cmake3比较难装，遇到了一些困难
 但用dockerfile生成镜像的时候，还是因为网络问题，一直不能成功，，，
 
 #### 2.4 最后尝试
-最后还是硬着头皮用```git clone```把```tidb```项目下载到了本地，然后到tidb的目录下，然后执行```make```命令，等了一两分钟，没有报错，提示编译好了，感激涕零啊。
+最后还是硬着头皮用```git clone```把```tidb```项目下载到了本地**mac环境**，然后到tidb的目录下，然后执行```make```命令，等了一两分钟，没有报错，提示编译好了，感激涕零啊。
 ```
 $ make
 CGO_ENABLED=1 GO111MODULE=on go build  -tags codes  -ldflags '-X "github.com/pingcap/parser/mysql.TiDBReleaseVersion=v4.0.0-beta.2-960-g5184a0d70" -X "github.com/pingcap/tidb/util/versioninfo.TiDBBuildTS=2020-08-16 02:27:00" -X "github.com/pingcap/tidb/util/versioninfo.TiDBGitHash=5184a0d7060906e2022d18f11532f119f5df3f39" -X "github.com/pingcap/tidb/util/versioninfo.TiDBGitBranch=master" -X "github.com/pingcap/tidb/util/versioninfo.TiDBEdition=Community" ' -o bin/tidb-server tidb-server/main.go
