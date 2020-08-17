@@ -82,6 +82,42 @@ func (e *SimpleExec) executeBegin(ctx context.Context, s *ast.BeginStmt) error {
 	e.ctx.GetSessionVars().SetStatusFlag(mysql.ServerStatusInTrans, true)
 ```
 
+### 4.结果
+编译输出如下：
+```
+$ make
+CGO_ENABLED=1 GO111MODULE=on go build  -tags codes  -ldflags '-X "github.com/pingcap/parser/mysql.TiDBReleaseVersion=v4.0.0-beta.2-960-g5184a0d70-dirty" -X "github.com/pingcap/tidb/util/versioninfo.TiDBBuildTS=2020-08-17 03:15:38" -X "github.com/pingcap/tidb/util/versioninfo.TiDBGitHash=5184a0d7060906e2022d18f11532f119f5df3f39" -X "github.com/pingcap/tidb/util/versioninfo.TiDBGitBranch=master" -X "github.com/pingcap/tidb/util/versioninfo.TiDBEdition=Community" ' -o bin/tidb-server tidb-server/main.go
+Build TiDB Server successfully!
+```
+
+mysql客户端
+```
+ mysql --host 127.0.0.1 --port 4000 -u root
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 1
+Server version: 5.7.25-TiDB-v4.0.0-beta.2-960-g5184a0d70-dirty TiDB Server (Apache License 2.0) Community Edition, MySQL 5.7 compatible
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+#启动一个事务
+mysql> begin;
+Query OK, 0 rows affected (0.00 sec)
+```
+
+日志输出如下：
+```
+[2020/08/16 21:16:11.396 +08:00] [INFO] [server.go:235] ["server is running MySQL protocol"] [addr=0.0.0.0:4000]
+[2020/08/16 21:16:11.396 +08:00] [INFO] [http_status.go:82] ["for status and metrics report"] ["listening on addr"=0.0.0.0:10080]
+[2020/08/16 21:16:11.398 +08:00] [INFO] [domain.go:1094] ["init stats info time"] ["take time"=2.044684ms]
+[2020/08/16 21:16:27.094 +08:00] [INFO] [server.go:388] ["new connection"] [conn=1] [remoteAddr=127.0.0.1:49808]
+[2020/08/16 21:16:30.998 +08:00] [INFO] [simple.go:563] ["hello transaction --- by cfq"]
+```
 
 这是一篇趟坑笔记，在经历了多次尝试后终于成功了。
 
